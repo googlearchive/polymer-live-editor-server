@@ -1,0 +1,26 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="./editor-server.html">
+
+<dom-module id="server-app">
+  <template>
+    <style>
+          :host {
+            display: block;
+          }
+    </style>
+    
+    <editor-server id="editor"></editor-server>
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class ServerApp extends Polymer.Element {
+      static get is() { return 'server-app'; }
+    }
+
+    window.customElements.define(ServerApp.is, ServerApp);
+  </script>
+</dom-module>

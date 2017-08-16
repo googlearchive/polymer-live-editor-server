@@ -1,0 +1,145 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<dom-module id="editor-server">
+  <template>
+    <style>
+          :host {
+            display: block;
+            height: 100%;
+          }
+
+          #container {
+            height: 100%;
+          }
+
+           iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            top: 0;
+            opacity: 1;
+            transition: -webkit-filter 500ms, opacity 300ms;
+            overflow: hidden;
+          } 
+
+          iframe.gray {
+            -webkit-filter: grayscale(100%);
+            z-index: 1;
+          }
+
+          iframe.fade {
+            opacity: 0;
+          }
+
+    </style>
+    
+    <div id="container"> 
+    </div>
+
+    
+  </template>
+
+  <script src="/socket.io/socket.io.js"></script>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class EditorServer extends Polymer.Element {
+      static get is() { return 'editor-server'; }
+
+      constructor() {
+        super();
+        window.addEventListener('message', this._onMessage.bind(this));
+      }
+
+      ready() {
+        super.ready();
+        if (!window.parent) 
+          return;
+
+        this.socket = io();     
+        this.socket.emit('client-connection');
+        this.socket.on('server-acknowledgement', function(socketId) {
+          this._serverSocketId = socketId;
+          this.socket.on('html-import-request', this._onHtmlImportRequest.bind(this));
+          window.parent.postMessage({ready: true}, '*');
+        }.bind(this));
+
+      }
+
+      _onMessage(event) {
+        if (!event || !event.data || !this._serverSocketId) 
+          return;  
+
+        this.htmlContents = event.data.codeObj;
+
+        let container = this.$.container;
+        if (this.loadingFrame) {
+          this.loadingFrame.onload = null;
+          container.removeChild(this.loadingFrame);
+        }
+
+        this.loadingFrame = document.createElement('iframe');
+        this.loadingFrame.setAttribute('role', 'none');
+        this.loadingFrame.setAttribute('src', '/' + this._serverSocketId + '/')
+        container.appendChild(this.loadingFrame);
+
+        try {
+          this.loadingFrame.contentDocument.open();         
+          this.loadingFrame.contentDocument.write('<!doctype html><head></head>');
+          var base = this.loadingFrame.contentDocument.createElement('base');
+          base.setAttribute('href', '/' + this._serverSocketId + '/');
+          this.loadingFrame.contentDocument.head.appendChild(base);
+          this.loadingFrame.contentDocument.write(this.htmlContents['index.html']);
+          this.loadingFrame.contentDocument.close();
+        } catch(err) {
+          this._removeFrame(this.loadingFrame);
+          return;
+        }
+
+        if (this.loadingFrame.contentDocument.readyState == 'loading') {
+          this.loadingFrame.onload = this._iframeLoaded.bind(this);
+        } else {
+          this._iframeLoaded();
+        }
+      }
+
+      _iframeLoaded() {
+        let oldFrame = this.currentFrame;
+        this.$.container.removeAttribute('class');
+        this.currentFrame = this.loadingFrame;
+        this._postHeight();
+
+        if (oldFrame) {
+          oldFrame.classList.add('fade');
+          setTimeout(this._removeFrame.bind(this, oldFrame), 500);
+        }
+      }
+
+      _removeFrame(frame) {
+        if (frame && frame.parentElement) {
+          console.log('removed frame');
+          frame.parentElement.removeChild(frame);          
+        }
+      }
+
+      _postHeight() {
+        if (window.parent && this.currentFrame && this.currentFrame.contentDocument)
+          window.parent.postMessage({height: this.currentFrame.contentDocument.documentElement.offsetHeight}, '*');
+      }
+
+      _onHtmlImportRequest(filename) {
+        if (filename && this.htmlContents && this.htmlContents[filename]) {
+          this.socket.emit('html-import-response', {content: this.htmlContents[filename], filename: filename});
+        } else {
+          this.socket.emit('html-import-error', {filename: filename, message: 'Not found'});
+        }
+      }
+
+    }
+
+    window.customElements.define(EditorServer.is, EditorServer);
+  </script>
+</dom-module>
