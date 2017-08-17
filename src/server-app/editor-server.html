@@ -83,14 +83,14 @@
 
         this.loadingFrame = document.createElement('iframe');
         this.loadingFrame.setAttribute('role', 'none');
-        this.loadingFrame.setAttribute('src', '/' + this._serverSocketId + '/')
+        this.loadingFrame.setAttribute('src', '/update-demo/' + this._serverSocketId + '/')
         container.appendChild(this.loadingFrame);
 
         try {
           this.loadingFrame.contentDocument.open();         
           this.loadingFrame.contentDocument.write('<!doctype html><head></head>');
           var base = this.loadingFrame.contentDocument.createElement('base');
-          base.setAttribute('href', '/' + this._serverSocketId + '/');
+          base.setAttribute('href', '/update-demo/' + this._serverSocketId + '/');
           this.loadingFrame.contentDocument.head.appendChild(base);
           this.loadingFrame.contentDocument.write(this.htmlContents['index.html']);
           this.loadingFrame.contentDocument.close();
@@ -120,7 +120,6 @@
 
       _removeFrame(frame) {
         if (frame && frame.parentElement) {
-          console.log('removed frame');
           frame.parentElement.removeChild(frame);          
         }
       }

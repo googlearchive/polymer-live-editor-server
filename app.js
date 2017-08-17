@@ -39,7 +39,7 @@ app.get('/update-demo/:socketId/:filename', (req, res) => {
   var socketId = req.params.socketId;
   var filename = req.params.filename;
   var socket = io.sockets.connected[socketId];
-  console.log('socketid/filename');
+  // console.log('socketid/filename');
   if (!socket)
     return res.status(200).send('Demo does not exist or was not initialized');
 	//return res.status(400).send('Demo does not exist or was not initialized');
