@@ -26,9 +26,13 @@ app.use('/src', express.static('src'));
 app.use('/bower_components', express.static(__dirname + '/bower_components'));
 app.use('/node_modules', express.static(__dirname + '/node_modules'));
 
-
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
+  var options = {
+    headers: {
+      'Content-Security-Policy': "frame-ancestors 'self' https://2017-08-17-dot-frizzle-server.appspot.com https://*.google.com:*/"
+    }
+  }
+  res.sendFile(__dirname + '/index.html', options);
 });
 
 app.get('/:socketId/:filename', (req, res) => {
