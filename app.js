@@ -23,7 +23,9 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
 app.use('/src', express.static('src'));
-app.use('/bower_components', express.static('bower_components'));
+app.use('/bower_components', express.static(__dirname + '/bower_components'));
+app.use('/node_modules', express.static(__dirname + '/node_modules'));
+
 
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');

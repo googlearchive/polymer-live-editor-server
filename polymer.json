@@ -1,7 +1,13 @@
 {
+  "entrypoint": "index.html",
   "lint": {
     "rules": [
       "polymer-2"
     ]
-  }
+  },
+  "sources": [
+    "node_modules/**/*",
+    "src/**/*",
+    "app.js"
+  ]
 }

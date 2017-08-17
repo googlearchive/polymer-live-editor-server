@@ -23,6 +23,8 @@
   },
   "dependencies": {
     "express": "4.15.3",
+    "google-cloud": "^0.56.0",
+    "prpl-server": "^0.8.0",
     "socket.io": "^2.0.3"
   },
   "devDependencies": {
