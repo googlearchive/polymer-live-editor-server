@@ -35,12 +35,14 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html', options);
 });
 
-app.get('/:socketId/:filename', (req, res) => {
+app.get('/update-demo/:socketId/:filename', (req, res) => {
   var socketId = req.params.socketId;
   var filename = req.params.filename;
   var socket = io.sockets.connected[socketId];
+  console.log('socketid/filename');
   if (!socket)
-    return res.status(400).send('Demo does not exist or was not initialized');
+    return res.status(200).send('Demo does not exist or was not initialized');
+	//return res.status(400).send('Demo does not exist or was not initialized');
 
   socket.emit('html-import-request', filename);
 
