@@ -27,11 +27,12 @@ app.use('/bower_components', express.static(__dirname + '/bower_components'));
 app.use('/node_modules', express.static(__dirname + '/node_modules'));
 
 app.get('/', (req, res) => {
-  var options = {
-    headers: {
-      'Content-Security-Policy': "frame-ancestors 'self' https://2017-08-17-dot-frizzle-server.appspot.com https://*.google.com:*/"
-    }
-  }
+  // var options = {
+  //   headers: {
+  //     'Content-Security-Policy': "frame-ancestors 'self' https://2017-08-17-dot-frizzle-server.appspot.com https://*.google.com:*/"
+  //   }
+  // }
+  var options = {};
   res.sendFile(__dirname + '/index.html', options);
 });
 
@@ -41,8 +42,7 @@ app.get('/update-demo/:socketId/:filename', (req, res) => {
   var socket = io.sockets.connected[socketId];
   // console.log('socketid/filename');
   if (!socket)
-    return res.status(200).send('Demo does not exist or was not initialized');
-	//return res.status(400).send('Demo does not exist or was not initialized');
+    return res.status(400).send('Demo does not exist or was not initialized');
 
   socket.emit('html-import-request', filename);
 
