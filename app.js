@@ -39,9 +39,10 @@ app.get('/', (req, res) => {
   // TODO (eblaine): load whitelisted domains from file once the editor is live
   var options = {
     headers: {
-      'Content-Security-Policy': "frame-ancestors 'self' https://2017-08-29-dot-frizzle-server.appspot.com https://*.google.com:*/"
+      'Content-Security-Policy': "frame-ancestors 'self' https://2017-08-29-dot-frizzle-server.appspot.com https://*.google.com:*/ 127.0.0.1 "
     }
   }
+  options = {};
   res.sendFile(__dirname + '/index.html', options);
 });
 

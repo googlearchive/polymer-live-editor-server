@@ -87,7 +87,7 @@
       _onMessage(event) {
         if (!event || !event.data || !this._serverSocketId) return;  
 
-        this.htmlContents = event.data.codeObj;
+        this.fileContents = event.data.codeObj;
 
         let container = this.$.container;
         if (this.loadingFrame) {
@@ -106,7 +106,7 @@
           var base = this.loadingFrame.contentDocument.createElement('base');
           base.setAttribute('href', '/update-demo/' + this._serverSocketId + '/');
           this.loadingFrame.contentDocument.head.appendChild(base);
-          this.loadingFrame.contentDocument.write(this.htmlContents['index.html']);
+          this.loadingFrame.contentDocument.write(this.fileContents['index.html']);
           this.loadingFrame.contentDocument.close();
         } catch(err) {
           this._removeFrame(this.loadingFrame);
@@ -145,8 +145,8 @@
       }
 
       _onHtmlImportRequest(filename) {
-        if (filename && this.htmlContents && this.htmlContents[filename]) {
-          this.socket.emit('html-import-response', {content: this.htmlContents[filename], filename: filename});
+        if (filename && this.fileContents && this.fileContents[filename]) {
+          this.socket.emit('html-import-response', {content: this.fileContents[filename], filename: filename});
         } else {
           this.socket.emit('html-import-error', {filename: filename, message: 'Not found'});
         }
