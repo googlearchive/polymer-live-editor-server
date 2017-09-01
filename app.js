@@ -36,6 +36,7 @@ app.use('/bower_components', express.static(__dirname + '/bower_components'));
 app.use('/node_modules', express.static(__dirname + '/node_modules'));
 
 app.get('/', (req, res) => {
+  // TODO (eblaine): load whitelisted domains from file once the editor is live
   var options = {
     headers: {
       'Content-Security-Policy': "frame-ancestors 'self' https://2017-08-29-dot-frizzle-server.appspot.com https://*.google.com:*/"
@@ -48,23 +49,22 @@ app.get('/update-demo/:socketId/:filename', (req, res) => {
   var socketId = req.params.socketId;
   var filename = req.params.filename;
   var socket = io.sockets.connected[socketId];
-  // console.log('socketid/filename');
-  if (!socket)
+  if (!socket) {
     return res.status(400).send('Demo does not exist or was not initialized');
+  }
 
   socket.emit('html-import-request', filename);
 
   function responseCallback(fileData) {
-    if (filename !== fileData.filename)
-      return;
+    if (filename !== fileData.filename) return;
+
     res.status(200).send(fileData.content);
     socket.removeListener('html-import-response', responseCallback);
     socket.removeListener('html-import-error', errorCallback);    
   };
 
   function errorCallback(errorData) {
-    if (filename !== errorData.filename)
-      return;
+    if (filename !== errorData.filename) return;
   
     res.status(404).send(errorData.message);
     socket.removeListener('html-import-error', errorCallback);
@@ -75,75 +75,6 @@ app.get('/update-demo/:socketId/:filename', (req, res) => {
   socket.on('html-import-error', errorCallback);
 
 });
-
-// app.get('/update-demo/:filename/:socketId', function(req, res) {
-//   console.log('update-demo');
-//   let socketId = req.params.socketId;
-//   let filename = req.params.filename;
-//   req.session[filename] = socketId;
-//   console.log(filename);
-//   console.log(req.params.socketId);
-//   console.log(req.session[filename]);
-//   console.log('-----')
-//   res.status(200).send('file ' + filename + ' added to socket');
-// });
-
-// // 404 redirect handles failed HTML imports 
-// app.get('*', function(req, res){
-//   let filename = req.url.trim().substring(1);
-//   if (!req.session[filename]) {
-//     res.status(404).send('Not found');
-//     return;
-//   }
-
-//   console.log(req.session[filename]);
-//   console.log(Object.keys(io.sockets.connected));
-//   return res.status(200).send('ok');
-
-//   var socket = io.sockets.connected[req.session[filename]];
-  
-//   if (!socket) {
-//     res.status(400).send('Socket not connected');
-//     return;
-//   }
-//   // console.log(io.sockets.connected);
-//   // console.log('emitting request for file
-
-//   socket.to(socket.id).emit('html-import-request', filename);
-//   let resolve, reject;
-//   var promise = new Promise(function(res, rej) {
-//       resolve = res;
-//       reject = rej;
-//     });
-
-//   function createResponseCallback(resolve) {
-//     return function responseCallback(fileData) {
-//       console.log('received req ', fileData);
-//       if (filename !== fileData.filename)
-//         return;
-//       // res.status(200).send(fileData.content);
-//       resolve(fileData.content);
-//       socket.removeListener('html-import-response', responseCallback);
-//       socket.removeListener('html-import-error', errorCallback);    
-//     };
-//   };
-
-//   function createErrorCallback(reject) {
-//     return function errorCallback(errorData) {
-//       if (filename !== errorData.filename)
-//         return;
-      
-      
-//       reject(errorData.message);
-//       socket.removeListener('html-import-error', errorCallback);
-//       socket.removeListener('html-import-response', responseCallback);
-//     };
-//   }
-
-//   socket.on('html-import-response', createResponseCallback(resolve));
-//   socket.on('html-import-error', createErrorCallback(reject));
-//   return promise;
-// });
 
 app.get('*', (req, res) => {
   res.status(404).send('Not found');
@@ -158,9 +89,7 @@ io.on('connection', function(socket){
 });
 
 // Start the server
-// console.log(http.address().address);
-//const PORT = process.env.PORT || 3000;
-const PORT = 8080;
+const PORT = process.env.PORT || 8080;
 https.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
   console.log('Press Ctrl+C to quit.');
