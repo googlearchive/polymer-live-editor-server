@@ -27,6 +27,7 @@
     "bower": "^1.8.0",
     "express": "4.15.3",
     "google-cloud": "^0.56.0",
+    "https": "^1.0.0",
     "prpl-server": "^0.8.0",
     "socket.io": "^2.0.3"
   },

@@ -17,22 +17,30 @@
 
 // [START app]
 const express = require('express');
+const fs = require('fs');
+
+var privateKey = fs.readFileSync('key.pem').toString();
+var certificate = fs.readFileSync('cert.pem').toString();
+
+var credentials = {key: privateKey, cert: certificate};
 
 const app = express();
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
+
+var https = require('https').Server(credentials, app);
+
+
+var io = require('socket.io')(https);
 
 app.use('/src', express.static('src'));
 app.use('/bower_components', express.static(__dirname + '/bower_components'));
 app.use('/node_modules', express.static(__dirname + '/node_modules'));
 
 app.get('/', (req, res) => {
-  // var options = {
-  //   headers: {
-  //     'Content-Security-Policy': "frame-ancestors 'self' https://2017-08-17-dot-frizzle-server.appspot.com https://*.google.com:*/"
-  //   }
-  // }
-  var options = {};
+  var options = {
+    headers: {
+      'Content-Security-Policy': "frame-ancestors 'self' https://2017-08-29-dot-frizzle-server.appspot.com https://*.google.com:*/"
+    }
+  }
   res.sendFile(__dirname + '/index.html', options);
 });
 
@@ -151,8 +159,9 @@ io.on('connection', function(socket){
 
 // Start the server
 // console.log(http.address().address);
-const PORT = process.env.PORT || 3000;
-http.listen(PORT, () => {
+//const PORT = process.env.PORT || 3000;
+const PORT = 8080;
+https.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
   console.log('Press Ctrl+C to quit.');
 });
