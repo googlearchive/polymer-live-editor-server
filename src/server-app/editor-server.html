@@ -72,8 +72,7 @@
 
       ready() {
         super.ready();
-        if (!window.parent) 
-          return;
+        if (!window.parent) return;
 
         this.socket = io();     
         this.socket.emit('client-connection');
@@ -86,8 +85,7 @@
       }
 
       _onMessage(event) {
-        if (!event || !event.data || !this._serverSocketId) 
-          return;  
+        if (!event || !event.data || !this._serverSocketId) return;  
 
         this.htmlContents = event.data.codeObj;
 
@@ -141,8 +139,9 @@
       }
 
       _postHeight() {
-        if (window.parent && this.currentFrame && this.currentFrame.contentDocument)
+        if (window.parent && this.currentFrame && this.currentFrame.contentDocument) {
           window.parent.postMessage({height: this.currentFrame.contentDocument.documentElement.offsetHeight}, '*');
+        }
       }
 
       _onHtmlImportRequest(filename) {
