@@ -29,8 +29,8 @@ var https = require('https').Server(credentials, app);
 var io = require('socket.io')(https);
 
 app.use('/src', express.static(__dirname + '/src'));
-app.use('/bower_components', express.static(__dirname + '/bower_components'));
-app.use('/node_modules', express.static(__dirname + '/node_modules'));
+app.use('/bower_components', express.static(__dirname + '/src/bower_components'));
+app.use('/node_modules', express.static(__dirname + '/src/node_modules'));
 
 app.get('/', (req, res) => {
   // TODO (eblaine): load whitelisted domains from file once the editor is live
@@ -40,7 +40,7 @@ app.get('/', (req, res) => {
     }
   }
   options = {};
-  res.sendFile(__dirname + '/index.html', options);
+  res.sendFile(__dirname + '/src/index.html', options);
 });
 
 app.get('/update-demo/:socketId/:filename', (req, res) => {
