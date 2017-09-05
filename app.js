@@ -77,6 +77,8 @@ app.get('*', (req, res) => {
   res.status(404).send('Not found');
 });
 
+// connection made when client loads
+// initializes socket for handling HTML imports in user code
 io.on('connection', function(socket){
   socket.on('client-connection', function() {
     socket.emit('server-acknowledgement', socket.id);

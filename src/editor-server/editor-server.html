@@ -72,6 +72,7 @@
 
       ready() {
         super.ready();
+        // this code should only ever be running in an iFrame
         if (!window.parent) return;
 
         this.socket = io();     
