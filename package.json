@@ -4,43 +4,23 @@
   "main": "app.js",
   "version": "0.0.1",
   "private": true,
-  "license": "Apache-2.0",
   "author": "Google Inc.",
   "repository": {
     "type": "git",
     "url": "https://github.com/PolymerLabs/polymer-live-editor-server.git"
   },
   "engines": {
-    "node": ">=4.3.2",
+    "node": "=>4.3.2",
     "npm": "^5.0.3"
   },
   "scripts": {
     "start": "node app.js",
-    "lint": "samples lint",
-    "pretest": "npm run lint",
-    "system-test": "samples test app",
-    "test": "npm run system-test",
-    "e2e-test": "samples test deploy",
     "postinstall": "bower install"
   },
   "dependencies": {
     "bower": "^1.8.0",
     "express": "4.15.3",
-    "google-cloud": "^0.56.0",
     "https": "^1.0.0",
-    "prpl-server": "^0.8.0",
     "socket.io": "^2.0.3"
-  },
-  "devDependencies": {
-    "@google-cloud/nodejs-repo-tools": "1.4.16"
-  },
-  "cloud-repo-tools": {
-    "test": {
-      "app": {
-        "msg": "Hello, world!"
-      }
-    },
-    "requiresKeyFile": true,
-    "requiresProjectId": true
   }
 }

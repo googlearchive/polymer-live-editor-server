@@ -88,42 +88,41 @@
         if (!event || !event.data || !this._serverSocketId) return;  
 
         this.fileContents = event.data.codeObj;
-
-        let container = this.$.container;
-        if (this.loadingFrame) {
-          this.loadingFrame.onload = null;
-          container.removeChild(this.loadingFrame);
+        var container = this.$.container;
+        if (this._loadingFrame) {
+          this._loadingFrame.onload = null;
+          container.removeChild(this._loadingFrame);
         }
 
-        this.loadingFrame = document.createElement('iframe');
-        this.loadingFrame.setAttribute('role', 'none');
-        this.loadingFrame.setAttribute('src', '/update-demo/' + this._serverSocketId + '/')
-        container.appendChild(this.loadingFrame);
+        this._loadingFrame = document.createElement('iframe');
+        this._loadingFrame.setAttribute('role', 'none');
+        this._loadingFrame.setAttribute('src', '/update-demo/' + this._serverSocketId + '/')
+        container.appendChild(this._loadingFrame);
 
         try {
-          this.loadingFrame.contentDocument.open();         
-          this.loadingFrame.contentDocument.write('<!doctype html><head></head>');
-          var base = this.loadingFrame.contentDocument.createElement('base');
+          this._loadingFrame.contentDocument.open();         
+          this._loadingFrame.contentDocument.write('<!doctype html><head></head>');
+          var base = this._loadingFrame.contentDocument.createElement('base');
           base.setAttribute('href', '/update-demo/' + this._serverSocketId + '/');
-          this.loadingFrame.contentDocument.head.appendChild(base);
-          this.loadingFrame.contentDocument.write(this.fileContents['index.html']);
-          this.loadingFrame.contentDocument.close();
+          this._loadingFrame.contentDocument.head.appendChild(base);
+          this._loadingFrame.contentDocument.write(this.fileContents['index.html']);
+          this._loadingFrame.contentDocument.close();
         } catch(err) {
-          this._removeFrame(this.loadingFrame);
+          this._removeFrame(this._loadingFrame);
           return;
         }
 
-        if (this.loadingFrame.contentDocument.readyState == 'loading') {
-          this.loadingFrame.onload = this._iframeLoaded.bind(this);
+        if (this._loadingFrame.contentDocument.readyState == 'loading') {
+          this._loadingFrame.onload = this._iframeLoaded.bind(this);
         } else {
           this._iframeLoaded();
         }
       }
 
       _iframeLoaded() {
-        let oldFrame = this.currentFrame;
+        var oldFrame = this.currentFrame;
         this.$.container.removeAttribute('class');
-        this.currentFrame = this.loadingFrame;
+        this.currentFrame = this._loadingFrame;
         this._postHeight();
 
         if (oldFrame) {

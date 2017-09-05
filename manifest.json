@@ -1,7 +1,0 @@
-
-{
-  "name": "server",
-  "short_name": "server",
-  "start_url": "/",
-  "display": "standalone"
-}

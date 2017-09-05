@@ -15,7 +15,6 @@
 
 'use strict';
 
-// [START app]
 const express = require('express');
 const fs = require('fs');
 
@@ -27,11 +26,9 @@ var credentials = {key: privateKey, cert: certificate};
 const app = express();
 
 var https = require('https').Server(credentials, app);
-
-
 var io = require('socket.io')(https);
 
-app.use('/src', express.static('src'));
+app.use('/src', express.static(__dirname + '/src'));
 app.use('/bower_components', express.static(__dirname + '/bower_components'));
 app.use('/node_modules', express.static(__dirname + '/node_modules'));
 
@@ -39,7 +36,7 @@ app.get('/', (req, res) => {
   // TODO (eblaine): load whitelisted domains from file once the editor is live
   var options = {
     headers: {
-      'Content-Security-Policy': "frame-ancestors 'self' https://2017-08-29-dot-frizzle-server.appspot.com https://*.google.com:*/ 127.0.0.1 "
+      'Content-Security-Policy': "frame-ancestors 'self'"
     }
   }
   options = {};
@@ -74,19 +71,17 @@ app.get('/update-demo/:socketId/:filename', (req, res) => {
 
   socket.on('html-import-response', responseCallback);
   socket.on('html-import-error', errorCallback);
-
 });
 
 app.get('*', (req, res) => {
   res.status(404).send('Not found');
-})
+});
 
 io.on('connection', function(socket){
   socket.on('client-connection', function() {
     socket.emit('server-acknowledgement', socket.id);
     socket.join(socket.id);
   });
-
 });
 
 // Start the server
@@ -95,4 +90,3 @@ https.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
   console.log('Press Ctrl+C to quit.');
 });
-// [END app]
