@@ -18,8 +18,10 @@
 const express = require('express');
 
 const fs = require('fs');
-const privateKey = fs.readFileSync('key.pem').toString();
-const certificate = fs.readFileSync('cert.pem').toString();
+const keyFileName = process.env.KEYFILE || 'key.pem';
+const certificateFileName = process.env.CERTFILE || 'cert.pem';
+const privateKey = fs.readFileSync(keyFileName).toString();
+const certificate = fs.readFileSync(certificateFileName).toString();
 const credentials = {key: privateKey, cert: certificate};
 
 const app = express();

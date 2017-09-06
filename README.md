@@ -12,11 +12,23 @@ this repo and run:
     npm install
     ./start.sh
 
-This will start a server listening on `localhost:8080`, unless
+This will start a server listening on `https://localhost:8080`, unless
 your machine's `$PORT` is set to something else. The server-side
 code resolves HTML import requests in the client code (which
 is retrieved from the contents of a `polymer-live-editor`
 instance.)
+
+## HTTPS 
+This server uses secure cookies to validate socket communication 
+requests. For this reason, the start script expects to see 
+files containing SSL certificate data. 
+
+Please do one of the following with your credentials:
+1. Name your key and cert files `key.pem` and `cert.pem`,
+respectively, and place them at the root of this project (out
+of version control.)
+2. Set environment variables `$KEYFILE` and `$CERTFILE`, with
+values being paths to those files on your machine.
 
 ## Using with `polymer-live-editor`
 This application will not work as expected unless used in
