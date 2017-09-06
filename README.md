@@ -10,7 +10,7 @@ To run an instance of `polymer-live-editor-server` locally, clone
 this repo and run:
 
     npm install
-    npm start
+    ./start.sh
 
 This will start a server listening on `localhost:8080`, unless
 your machine's `$PORT` is set to something else. The server-side

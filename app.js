@@ -16,16 +16,33 @@
 'use strict';
 
 const express = require('express');
-const fs = require('fs');
 
+const fs = require('fs');
 const privateKey = fs.readFileSync('key.pem').toString();
 const certificate = fs.readFileSync('cert.pem').toString();
 const credentials = {key: privateKey, cert: certificate};
 
 const app = express();
 
+const secret = process.env.SECRET; // set by start.sh (npm postinstall)
+const session = require('express-session');
+let MemoryStore = require('memorystore')(session);
+let configuredSession = session({
+  secret: secret,
+  cookie: {secure: true},
+  resave: false,
+  saveUninitialized: true,
+  store: new MemoryStore({
+    checkPeriod: 86400000 // prune expired entries every 24h 
+  })
+});
+app.set('trust proxy', 1) // trust first proxy 
+app.use(configuredSession);
+
 const https = require('https').Server(credentials, app);
 const io = require('socket.io')(https);
+let iosess = require('socket.io-express-session');
+io.use(iosess(configuredSession));
 
 app.use('/src', express.static(__dirname + '/src'));
 app.use('/bower_components', express.static(__dirname + '/src/bower_components'));
@@ -42,14 +59,19 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/src/index.html', options);
 });
 
-app.get('/update-demo/:socketId/:filename', (req, res) => {
-  const socketId = req.params.socketId;
-  const filename = req.params.filename;
-  let socket = io.sockets.connected[socketId];
+app.get('/update-demo/:socketID/:filename', (req, res) => {
+  const socketID = req.params.socketID;
+  
+  if (socketID !== req.session.socketID) {
+    return res.status(401).send('Invalid credentials.');
+  }
+
+  let socket = io.sockets.connected[socketID];
   if (!socket) {
     return res.status(400).send('Demo does not exist or was not initialized');
   }
 
+  const filename = req.params.filename;  
   socket.emit('html-import-request', filename);
 
   function responseCallback(fileData) {
@@ -80,8 +102,14 @@ app.get('*', (req, res) => {
 // initializes socket for handling HTML imports in user code
 io.on('connection', function(socket){
   socket.on('client-connection', function() {
+    socket.handshake.session.socketID = socket.id;
+    socket.handshake.session.save();
     socket.emit('server-acknowledgement', socket.id);
     socket.join(socket.id);
+  });
+
+  socket.on('disconnect', function() {
+    socket.handshake.session.destroy();
   });
 });
 
