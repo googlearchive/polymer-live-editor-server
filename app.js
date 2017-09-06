@@ -18,15 +18,14 @@
 const express = require('express');
 const fs = require('fs');
 
-var privateKey = fs.readFileSync('key.pem').toString();
-var certificate = fs.readFileSync('cert.pem').toString();
-
-var credentials = {key: privateKey, cert: certificate};
+const privateKey = fs.readFileSync('key.pem').toString();
+const certificate = fs.readFileSync('cert.pem').toString();
+const credentials = {key: privateKey, cert: certificate};
 
 const app = express();
 
-var https = require('https').Server(credentials, app);
-var io = require('socket.io')(https);
+const https = require('https').Server(credentials, app);
+const io = require('socket.io')(https);
 
 app.use('/src', express.static(__dirname + '/src'));
 app.use('/bower_components', express.static(__dirname + '/src/bower_components'));
@@ -44,9 +43,9 @@ app.get('/', (req, res) => {
 });
 
 app.get('/update-demo/:socketId/:filename', (req, res) => {
-  var socketId = req.params.socketId;
-  var filename = req.params.filename;
-  var socket = io.sockets.connected[socketId];
+  const socketId = req.params.socketId;
+  const filename = req.params.filename;
+  let socket = io.sockets.connected[socketId];
   if (!socket) {
     return res.status(400).send('Demo does not exist or was not initialized');
   }
