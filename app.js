@@ -38,7 +38,7 @@ let configuredSession = session({
     checkPeriod: 86400000 // prune expired entries every 24h 
   })
 });
-app.set('trust proxy', 1) // trust first proxy 
+app.set('trust proxy', 1); // trust first proxy 
 app.use(configuredSession);
 
 const https = require('https').Server(credentials, app);
@@ -57,7 +57,6 @@ app.get('/', (req, res) => {
       'Content-Security-Policy': "frame-ancestors 'self'"
     }
   }
-  options = {};
   res.sendFile(__dirname + '/src/index.html', options);
 });
 

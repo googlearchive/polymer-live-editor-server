@@ -53,7 +53,7 @@ to resolve those imports.
 As an example, say a `polymer-live-editor` user is editing
 two files: `custom-element.html` and `index.html`. Here are the contents
 of `custom-element.html`:
-
+```html
     <link rel="import"  href="/bower_components/polymer/polymer-element.html">
 
     <script>
@@ -61,19 +61,21 @@ of `custom-element.html`:
       class CustomElement extends Polymer.Element {
         static get is() { return "custom-element"; }
         constructor() {
-            super();
-            this.textContent = "I'm a custom-element.";
-          }
+          super();
+          this.textContent = "I'm a custom-element.";
+        }
       }
       // Register the new element with the browser
       customElements.define(CustomElement.is, CustomElement);
     </script>
+```
 
 And here is `index.html`:
-
+```html
     <script src="/bower_components/webcomponentsjs/webcomponents-loader.js"></script>
     <link rel="import" href="custom-element.html">
     <custom-element></custom-element>
+```
 
 In this case, the client code will use `document.write()` to write the 
 contents of `index.html`. During this process, the server will use a socket
