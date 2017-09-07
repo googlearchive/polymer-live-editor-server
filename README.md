@@ -1,7 +1,9 @@
 # polymer-live-editor-server
 Server and client code for previewing the results of
 user code typed in `polymer-live-editor` elements. This 
-server is aware of all Polymer elements.
+server is aware of elements in the PolymerElements org
+(`iron-elements`, `paper-elements`, `app-elements`, 
+and `gold-elements`).
 
 # Usage
 
