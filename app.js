@@ -52,7 +52,7 @@ app.use('/node_modules', express.static(__dirname + '/src/node_modules'));
 
 app.get('/', (req, res) => {
   // TODO (eblaine): load whitelisted domains from file once the editor is live
-  var options = {
+  let options = {
     headers: {
       'Content-Security-Policy': "frame-ancestors 'self'"
     }

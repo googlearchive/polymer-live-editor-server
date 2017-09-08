@@ -98,19 +98,20 @@ limitations under the License.
         container.appendChild(this._loadingFrame);
 
         try {
-          this._loadingFrame.contentDocument.open();         
-          this._loadingFrame.contentDocument.write('<!doctype html><head></head>');
-          var base = this._loadingFrame.contentDocument.createElement('base');
+          var contentDoc = this._loadingFrame.contentDocument;
+          contentDoc.open();         
+          contentDoc.write('<!doctype html><head></head>');
+          var base = contentDoc.createElement('base');
           base.setAttribute('href', '/update-demo/' + this._serverSocketId + '/');
-          this._loadingFrame.contentDocument.head.appendChild(base);
-          this._loadingFrame.contentDocument.write(this.fileContents['index.html']);
-          this._loadingFrame.contentDocument.close();
+          contentDoc.head.appendChild(base);
+          contentDoc.write(this.fileContents['index.html']);
+          contentDoc.close();
         } catch(err) {
           this._removeFrame(this._loadingFrame);
           return;
         }
 
-        if (this._loadingFrame.contentDocument.readyState == 'loading') {
+        if (contentDoc.readyState == 'loading') {
           this._loadingFrame.onload = this._iframeLoaded.bind(this);
         } else {
           this._iframeLoaded();
