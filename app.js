@@ -48,7 +48,6 @@ io.use(iosess(configuredSession));
 
 app.use('/src', express.static(__dirname + '/src'));
 app.use('/bower_components', express.static(__dirname + '/src/bower_components'));
-app.use('/node_modules', express.static(__dirname + '/src/node_modules'));
 
 app.get('/', (req, res) => {
   // TODO (eblaine): load whitelisted domains from file once the editor is live
