@@ -72,7 +72,7 @@ limitations under the License.
         // this code should only ever be running in an iFrame
         if (!window.parent) return;
 
-        this.socket = io();     
+        this.socket = io('/', {reconnectionAttempts: 5});     
         this.socket.emit('client-connection');
         this.socket.on('server-acknowledgement', function(socketId) {
           this._serverSocketId = socketId;
