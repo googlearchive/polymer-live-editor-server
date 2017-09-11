@@ -1,0 +1,19 @@
+{
+  "name": "frizzle-frame-client",
+  "description": "Client side of application to display user code typed in `polymer-live-editor` elements",
+  "main": "index.html",
+  "version": "0.0.1",
+  "private": true,
+  "author": "Google Inc.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/PolymerLabs/polymer-live-editor-server.git"
+  },
+  "scripts": {
+    "postinstall": "bower install"
+  },
+  "dependencies": {
+    "bower": "^1.8.0",
+    "socket.io": "^2.0.3"
+  }
+}

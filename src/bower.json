@@ -1,0 +1,19 @@
+{
+  "name": "server",
+  "main": "index.html",
+  "dependencies": {
+    "polymer": "Polymer/polymer#^2.0.0",
+    "paper-elements": "PolymerElements/paper-elements#^1.0.7",
+    "iron-elements": "PolymerElements/iron-elements#^1.0.10",
+    "app-elements": "PolymerElements/app-elements#^1.0.0",
+    "gold-elements": "PolymerElements/gold-elements#^1.0.1"
+  },
+  "devDependencies": {
+    "web-component-tester": "Polymer/web-component-tester#^6.0.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0"
+  },
+  "resolutions": {
+    "webcomponentsjs": "^1.0.0",
+    "polymer": "^2.0.0"
+  }
+}
